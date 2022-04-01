@@ -10,7 +10,11 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 
+from ctypes import cast
+from django.contrib.messages import constants as messages
+from email.policy import default
 from pathlib import Path
+from decouple import config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve(strict=True).parent.parent
@@ -20,10 +24,10 @@ BASE_DIR = Path(__file__).resolve(strict=True).parent.parent
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'z(yjr&pbn3xw869v%9q++$5ovsmr)8d8(oj%jax1l1m(yn*(_2'
+SECRET_KEY = config('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = config('DEBUG', default=True, cast=bool)
 
 ALLOWED_HOSTS = []
 
@@ -41,8 +45,8 @@ INSTALLED_APPS = [
     'accounts',
     'store',
     'carts',
-    'orders'
-
+    'orders',
+    'admin_honeypot'
 ]
 
 MIDDLEWARE = [
@@ -53,7 +57,13 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django_session_timeout.middleware.SessionTimeoutMiddleware',
+
 ]
+
+SESSION_EXPIRE_SECONDS = 3600  # 1 hour
+SESSION_EXPIRE_AFTER_LAST_ACTIVITY = True
+SESSION_TIMEOUT_REDIRECT = 'accounts/login'
 
 ROOT_URLCONF = 'nshop.urls'
 
@@ -127,24 +137,23 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
-STATIC_ROOT = BASE_DIR /'static'
+STATIC_ROOT = BASE_DIR / 'static'
 STATICFILES_DIRS = [
     'nshop/static',
 ]
 
 # media files configuration
 MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR /'media'
+MEDIA_ROOT = BASE_DIR / 'media'
 
 
-from django.contrib.messages import constants as messages
 MESSAGE_TAGS = {
     messages.ERROR: 'danger',
 }
 
 # SMTP configuration
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 587
-EMAIL_HOST_USER = 'nguyensyhoa999@gmail.com'
-EMAIL_HOST_PASSWORD = 'Nsh@09081999'
-EMAIL_USE_TLS = True
+EMAIL_HOST = config('EMAIL_HOST')
+EMAIL_PORT = config('EMAIL_PORT', cast=int)
+EMAIL_HOST_USER = config('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
+EMAIL_USE_TLS = config('EMAIL_USE_TLS', cast=bool)

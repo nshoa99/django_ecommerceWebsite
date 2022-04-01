@@ -1,3 +1,4 @@
+from tabnanny import verbose
 from django.db import models
 from category.models import Category
 from django.urls import reverse
@@ -81,3 +82,17 @@ class ReviewRating(models.Model):
 
     def __str__(self):
         return self.subject
+
+
+class ProductGallery(models.Model):
+
+    product = models.ForeignKey(
+        Product, on_delete=models.CASCADE, default=None)
+    image = models.ImageField(upload_to='store/products', max_length=255)
+
+    def __str__(self):
+        return self.product.product_name
+
+    class Meta:
+        verbose_name = 'productgallery'
+        verbose_name_plural = 'product gallery'
