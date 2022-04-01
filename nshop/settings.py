@@ -145,6 +145,8 @@ STATIC_ROOT = BASE_DIR / 'static'
 STATICFILES_DIRS = [
     'nshop/static',
 ]
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+
 
 # media files configuration
 MEDIA_URL = '/media/'
