@@ -7,12 +7,12 @@ def index(request):
     products = Product.objects.all().filter(
         is_available=True).order_by('created_date')[:8]
 
-    # for product in products:
-    #     reviews = ReviewRating.objects.filter(
-    #         product_id=product.id, status=True)
+    for product in products:
+        reviews = ReviewRating.objects.filter(
+            product_id=product.id, status=True)
 
     context = {
-        # 'reviews': reviews,
+        'reviews': reviews,
         'products': products
     }
     return render(request, 'index.html', context)
