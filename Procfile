@@ -1,1 +1,1 @@
-gunicorn nshop.wsgi --log-file -
+web: gunicorn nshop.wsgi
