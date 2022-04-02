@@ -1,1 +1,2 @@
-web: python manage.py migrate && gunicorn nshop.wsgi
+gunicorn nshop.wsgi:application --log-file - --log-level debug
+
